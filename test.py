@@ -76,14 +76,6 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 """
 
 
-def tokenize_intruder_signal(intruder_signal): 
-
-    dimensions = get_signal_dimensions(intruder_signal)
-
-    rows = []
-    
-    for i in range(0, dimensions[0]):
-        rows.append()
 
 
 
@@ -112,7 +104,26 @@ def get_signal_dimensions(signal):
     columns = (len(signal)-rows)/rows            
 
 
-    return (rows, columns) 
+    return (rows, columns)
+
+
+
+
+def tokenize_intruder_signal(intruder_signal): 
+
+    dimensions = get_signal_dimensions(intruder_signal)
+
+    rows = []
+    
+    for i in range(0, int(dimensions[0]) * (int(dimensions[1])), int(dimensions[1] + 1)):
+        row = intruder_signal[i:i+int(dimensions[1])]
+        rows.append(row)
+
+    return rows
+        
+
+
+tokenize_intruder_signal(known_intruder_2) 
 
 
 def detect_intruder(radar_signal, known_intruder):
