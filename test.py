@@ -1,5 +1,5 @@
 
-
+import time
 
 
 
@@ -103,7 +103,6 @@ def get_signal_dimensions(signal):
 
     columns = (len(signal)-rows)/rows            
 
-
     return (rows, columns)
 
 
@@ -118,6 +117,7 @@ def tokenize_intruder_signal(intruder_signal):
     for i in range(0, int(dimensions[0]) * (int(dimensions[1])), int(dimensions[1] + 1)):
         row = intruder_signal[i:i+int(dimensions[1])]
         rows.append(row)
+
 
     return rows
         
@@ -141,55 +141,77 @@ def detect_intruder(radar_signal, known_intruder):
     end_index = int(len(radar_signal) - (radar_signal_dimensions[1] * known_intruder_dimensions[0] + known_intruder_dimensions[0]) + (radar_signal_dimensions[1] - known_intruder_dimensions[1]))
 
 
-    for i in range(0, end_index): 
+    print(end_index)
 
-        window = "a"
+    intruder_signal = tokenize_intruder_signal(known_intruder)
+
+    window_hamming_distance = 0 
+
+    min_hamming = float("inf")
+
+    for i in range(0, end_index):
+
+        row_interval = 0 
+        window_hamming = 0
+
+        for j in range(0, len(intruder_signal)):
+
+            start_index = i + row_interval
+            end_index = start_index + int(known_intruder_dimensions[1])
+
+            comparison_string = radar_signal[start_index:end_index]
+
+            distance = hamming(intruder_signal[j], comparison_string)
+
+            window_hamming += distance
+
+            row_interval += int(radar_signal_dimensions[1]) + 1
+            
+            #if i == 1373:
+            #    print(intruder_signal[j], comparison_string, distance)
 
 
-
-
-
-
-detect_intruder(radar_sample, known_intruder_1)
-
-
-
-
-"""
-
-def detect_intruder(radar_signal, intruder):
-
-
-    window_length = len(intruder)
-
-    # Keep track of potential threat
-
-    _min = float("inf")
-    _min_start_index = int()
-
-    for i in range(0, len(radar_signal) - window_length):
         
-        sliding_window = radar_signal[i:i + window_length]
-        
+        if window_hamming < min_hamming:
 
-        # Take the hamming distance of the 
-        distance = hamming(sliding_window, intruder)
-
-        if distance < _min:
-            _min = distance 
-            _min_start_index = i
+            min_hamming = window_hamming
+            min_hamming_start_index = i 
 
     
-    print("Min hamming distance: ", _min)
+    visualize_intruder(radar_sample, intruder_signal, 1373)
 
-"""
-
-
-
-
+        
+    
+    return min_hamming, min_hamming_start_index
 
 
-#detect_intruder(radar_sample, known_intruder_2)
+
+def visualize_intruder(radar_signal, tokenized_intruder_signal, min_hamming_start_index): 
+
+    radar_signal_dimensions = get_signal_dimensions(radar_signal)
+
+    row_interval = 0
+
+    for i in range(0, len(tokenized_intruder_signal)):
+
+        start_index = min_hamming_start_index
+        end_index = start_index + len(tokenized_intruder_signal[0])
+
+        comparison_string = radar_signal[start_index:end_index]
+
+        row_interval += int(radar_signal_dimensions[1]) + 1
+
+        print(tokenized_intruder_signal[i], comparison_string)
+
+
+
+        
+
+
+
+
+            
+detect_intruder(radar_sample, known_intruder_1)
  
 
 
