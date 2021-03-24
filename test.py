@@ -140,9 +140,6 @@ def detect_intruder(radar_signal, known_intruder):
 
     end_index = int(len(radar_signal) - (radar_signal_dimensions[1] * known_intruder_dimensions[0] + known_intruder_dimensions[0]) + (radar_signal_dimensions[1] - known_intruder_dimensions[1]))
 
-
-    print(end_index)
-
     intruder_signal = tokenize_intruder_signal(known_intruder)
 
     window_hamming_distance = 0 
@@ -178,7 +175,7 @@ def detect_intruder(radar_signal, known_intruder):
             min_hamming_start_index = i 
 
     
-    visualize_intruder(radar_sample, intruder_signal, 1373)
+    visualize_intruder(radar_signal, radar_signal_dimensions, intruder_signal, min_hamming_start_index)
 
         
     
@@ -186,15 +183,14 @@ def detect_intruder(radar_signal, known_intruder):
 
 
 
-def visualize_intruder(radar_signal, tokenized_intruder_signal, min_hamming_start_index): 
+def visualize_intruder(radar_signal, radar_signal_dimensions, tokenized_intruder_signal, min_hamming_start_index): 
 
-    radar_signal_dimensions = get_signal_dimensions(radar_signal)
 
     row_interval = 0
 
     for i in range(0, len(tokenized_intruder_signal)):
 
-        start_index = min_hamming_start_index
+        start_index = min_hamming_start_index + row_interval
         end_index = start_index + len(tokenized_intruder_signal[0])
 
         comparison_string = radar_signal[start_index:end_index]
