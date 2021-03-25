@@ -9,6 +9,8 @@ class Signal:
         else:
             self.signal = signal
 
+
+    # Gets the number of rows, columns for a given signal
     
     def get_signal_dimensions(self):
 
@@ -23,10 +25,8 @@ class Signal:
         return (int(rows), int(columns))
 
 
-    def __str__(self):
-        return self.signal
 
-
+# The signal patterns to be spotted
 
 class IntruderSignal(Signal):
 
@@ -34,6 +34,9 @@ class IntruderSignal(Signal):
 
         super(IntruderSignal, self).__init__(signal)
 
+
+    # The Detector class compares known intruder signal with radar signal row by row.
+    # We therefore use the tokenize_signal function to return a list of rows from the intruder signal pattern
 
     def tokenize_signal(self): 
 
@@ -48,6 +51,7 @@ class IntruderSignal(Signal):
         return rows
         
 
+# The signal which potentially contains the pattern of a known intruder
 
 class RadarSignal(Signal):
 
