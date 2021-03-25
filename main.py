@@ -1,7 +1,7 @@
 
-import time
+from signals import KnownIntruder, RadarSignal
 
-
+#### =============================================
 
 known_intruder_1 = """--o-----o--
 ---o---o---
@@ -65,7 +65,7 @@ o------o----oo-o-----------oo--o---o--------o-o------o-------o-o------o-oo------
 -------oo--o-o-----o-----o----o-o--o----------------------o-------o------o----oo----ooo---------o---
 o-----oo-------------------o--o-----o-----------o------o-------o----o-----------o----------------o--
 --o---o-------o------------o--------------------o----o--o-------------oo---o---------oo--------o----
---o--------o---------o------------o------o-------o------------o-------o---o---------oooooX--X-------
+--o--------o---------o------------o------o-------o------------o-------o---o---------ooooo-----------
 ------o--------------o-o-o---------o---o-------o--o-----o-------o-o----------o-----oo-ooo----------o
 --o---------------o----o--oo-------------o---------o-------------------oo---------oo-o-ooo----------
 -o-----------o------ooo----o----------------ooo-----o--------o--o---o-----------o-o-oooooo--------oo
@@ -76,13 +76,16 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 """
 
 
-
+#### =============================================
 
 
 def hamming(signal_a, signal_b):
 
+    if len(signal_a) == 0 or len(signal_b) == 0: 
+        raise Exception("Signal strings can not be empty")
+
     if len(signal_a) != len(signal_b):
-        return -1 
+        raise Exception("Signals strings must be equal length")
 
     hamming_distance = 0
     for i, j in zip(signal_a, signal_b): 
@@ -94,6 +97,9 @@ def hamming(signal_a, signal_b):
 
 
 def get_signal_dimensions(signal):
+
+    if len(signal) == 0 or signal == None:
+        raise Exception("Signal string can not be empty")
 
     rows = 0 
 
@@ -107,9 +113,11 @@ def get_signal_dimensions(signal):
 
 
 
-
 def tokenize_intruder_signal(intruder_signal): 
 
+    if intruder_signal == None or intruder_signal == None:
+        return -1 
+        
     dimensions = get_signal_dimensions(intruder_signal)
 
     rows = []
@@ -117,7 +125,6 @@ def tokenize_intruder_signal(intruder_signal):
     for i in range(0, int(dimensions[0]) * (int(dimensions[1])), int(dimensions[1] + 1)):
         row = intruder_signal[i:i+int(dimensions[1])]
         rows.append(row)
-
 
     return rows
         
@@ -128,6 +135,9 @@ tokenize_intruder_signal(known_intruder_2)
 
 def detect_intruder(radar_signal, known_intruder):
 
+    if len(radar_signal) == 0 or len(known_intruder) == 0: 
+        raise Exception("Signal strings can not be empty")
+        
 
     # Get signal dimensions
 
@@ -164,10 +174,6 @@ def detect_intruder(radar_signal, known_intruder):
 
             row_interval += int(radar_signal_dimensions[1]) + 1
             
-            #if i == 1373:
-            #    print(intruder_signal[j], comparison_string, distance)
-
-
         
         if window_hamming < min_hamming:
 
@@ -178,7 +184,6 @@ def detect_intruder(radar_signal, known_intruder):
     visualize_intruder(radar_signal, radar_signal_dimensions, intruder_signal, min_hamming_start_index)
 
         
-    
     return min_hamming, min_hamming_start_index
 
 
@@ -201,13 +206,29 @@ def visualize_intruder(radar_signal, radar_signal_dimensions, tokenized_intruder
 
 
 
-        
+
+if __name__ == "__main__":
+
+
+    k1 = KnownIntruder(known_intruder_1)
+    k2 = KnownIntruder(known_intruder_2)
+
+    rs = RadarSignal(radar_sample)
+
+    detector = Detector(radar_sample, k1)
+
+
+    print("=======================\n")
+    print("Detecting intruders....\n")
+
+
+    min_hamming, min_hamming_start_index = detect_intruder(radar_sample_1, known_intruder_11)
+
+    print("\n")
+    print(f'Potential intruder with hamming distance of {min_hamming} found')
 
 
 
-
-            
-detect_intruder(radar_sample, known_intruder_1)
  
 
 
