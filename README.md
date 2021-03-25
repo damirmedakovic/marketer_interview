@@ -23,3 +23,7 @@ The solution can easily be extended and improved:
 - The solution assumes that the radar signal input and known pattern inputs are on the format given. We could extend the detection algorithm to remove newline characters and perform detection on any string.
 - Further testing of functions. 
 
+# Example
+
+![example](example.png?raw=True)
+
