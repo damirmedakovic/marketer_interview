@@ -4,15 +4,21 @@ class Signal:
 
     def __init__(self, signal):
 
-        if len(signal) == 0 or signal == None:
+        if signal == None or len(signal) == 0:
             raise Exception("Signal string can not be empty")
         else:
             self.signal = signal
 
 
+
+
     # Gets the number of rows, columns for a given signal
     
     def get_signal_dimensions(self):
+
+        # Check if the signal is a vector and not a multidimensional matrix. Set number of rows to 1
+        if "\n" not in self.signal:
+            return (1, len(self.signal))
 
         rows = 0 
 

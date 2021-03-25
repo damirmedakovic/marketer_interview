@@ -6,6 +6,10 @@ import time
 
 def hamming(signal_a, signal_b):
 
+    if (signal_a == None or signal_b == None) or (len(signal_a) == 0 or len(signal_b) == 0):
+        raise Exception("Strings can not be empty")
+
+
     if len(signal_a) != len(signal_b):
         raise Exception("Signals strings must be equal length")
 
