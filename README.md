@@ -6,7 +6,7 @@
 
 The solution uses a sliding window to detect known intruders in the radar signal. 
 
-The only third-party package required is pytest and it's dependecies (see requirements.txt)
+The only third-party package required is pytest and its dependecies (see requirements.txt)
 
 The sliding window is implemented in the "detect_intruder" function and the window has the same dimensions as the known intruder example. The window iterates through the whole radar signal in order to scan for intruders.
 
